@@ -1,1 +1,1 @@
-# aws-iot-custom-auth-example
+# aws-iot-custom-auth-lambda
