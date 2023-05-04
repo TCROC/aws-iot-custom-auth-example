@@ -25,7 +25,7 @@ target/lambda/bootstrap/bootstrap
 or you can build a zipped version that is ready to be uploaded to aws with
 
 ```
-cargo lambda build --release --arm64
+cargo lambda build --release --arm64 -o zip
 ```
 
 and the zip will be located at:
