@@ -24,11 +24,11 @@ async fn func(event: LambdaEvent<IotAuthEvent>) -> Result<AwsAuthResponse, Error
     }
 
     let arn = format!("arn:aws:iot:{aws_region}:{aws_account_id}");
-    let user_id = event.payload.protocol_data.mqtt.username;
+    let client_id = event.payload.protocol_data.mqtt.client_id;
 
     Ok(AwsAuthResponse {
         is_authenticated: true,
-        principal_id: user_id.to_string(),
+        principal_id: client_id.to_string(),
         disconnect_after_in_seconds: disconnect_secs,
         refresh_after_in_seconds: refresh_secs,
         policy_documents: vec![AwsPolicyDocument {
@@ -99,9 +99,10 @@ struct IotAuthEventProtocolData {
 }
 
 #[derive(Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct IotAuthEventMqtt {
-    username: String,
     password: String,
+    client_id: String
 }
 
 #[derive(Serialize)]
