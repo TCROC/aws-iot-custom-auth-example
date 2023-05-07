@@ -39,20 +39,20 @@ async fn func(event: LambdaEvent<IotAuthEvent>) -> Result<AwsAuthResponse, Error
                     effect: "Allow".to_string(),
                     action: vec!["iot:Connect".to_string()],
                     resource: vec![format!("{arn}:client/${{iot:ClientId}}")],
-                    condition: HashMap::from([(
+                    condition: Some(HashMap::from([(
                         "ArnEquals".to_string(),
                         HashMap::from([(
                             "iot:LastWillTopic".to_string(),
                             vec![format!("{arn}:topic/{topic_root}/s/${{iot:ClientId}}")],
                         )]),
-                    )]),
+                    )])),
                 },
                 // Allow users to receive messages from this root topic
                 AwsPolicyDocumentStatement {
                     effect: "Allow".to_string(),
                     action: vec!["iot:Receive".to_string()],
                     resource: vec![format!("{arn}:topic/{topic_root}/*")],
-                    condition: HashMap::default(),
+                    condition: None,
                 },
                 AwsPolicyDocumentStatement {
                     effect: "Allow".to_string(),
@@ -65,7 +65,7 @@ async fn func(event: LambdaEvent<IotAuthEvent>) -> Result<AwsAuthResponse, Error
                         // Allows users to publish to their subscribers
                         format!("{arn}:topic/{topic_root}/s/${{iot:ClientId}}"),
                     ],
-                    condition: HashMap::default(),
+                    condition: None,
                 },
                 AwsPolicyDocumentStatement {
                     effect: "Allow".to_string(),
@@ -80,7 +80,7 @@ async fn func(event: LambdaEvent<IotAuthEvent>) -> Result<AwsAuthResponse, Error
                         // Allow users to subscribe to flexmatch ticket updates
                         format!("{arn}:topicfilter/{topic_root}/f/*"),
                     ],
-                    condition: HashMap::default(),
+                    condition: None,
                 },
             ],
         }],
@@ -140,5 +140,6 @@ struct AwsPolicyDocumentStatement {
     effect: String,
     action: Vec<String>,
     resource: Vec<String>,
-    condition: HashMap<String, HashMap<String, Vec<String>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    condition: Option<HashMap<String, HashMap<String, Vec<String>>>>,
 }
