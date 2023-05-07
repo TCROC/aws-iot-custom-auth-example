@@ -39,13 +39,13 @@ async fn func(event: LambdaEvent<IotAuthEvent>) -> Result<AwsAuthResponse, Error
                     effect: "Allow".to_string(),
                     action: vec!["iot:Connect".to_string()],
                     resource: vec![format!("{arn}:client/${{iot:ClientId}}")],
-                    condition: Some(HashMap::from([(
+                    condition: None, /* Some(HashMap::from([(
                         "ArnEquals".to_string(),
                         HashMap::from([(
                             "iot:LastWillTopic".to_string(),
                             vec![format!("{arn}:topic/{topic_root}/s/${{iot:ClientId}}")],
                         )]),
-                    )])),
+                    )])),*/
                 },
                 // Allow users to receive messages from this root topic
                 AwsPolicyDocumentStatement {
