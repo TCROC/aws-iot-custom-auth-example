@@ -43,7 +43,7 @@ async fn func(event: LambdaEvent<IotAuthEvent>) -> Result<AwsAuthResponse, Error
                         "ArnEquals".to_string(),
                         HashMap::from([(
                             "iot:LastWillTopic".to_string(),
-                            vec![format!("{arn}:topic/{topic_root}/s/${{iot:ClientId}}")],
+                            format!("{arn}:topic/{topic_root}/s/${{iot:ClientId}}"),
                         )]),
                     )])),*/
                 },
@@ -141,5 +141,5 @@ struct AwsPolicyDocumentStatement {
     action: Vec<String>,
     resource: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    condition: Option<HashMap<String, HashMap<String, Vec<String>>>>,
+    condition: Option<HashMap<String, HashMap<String, String>>>,
 }
